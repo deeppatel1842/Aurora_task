@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  qa-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - API_BASE_URL=https://november7-730026606190.europe-west1.run.app
+      - LOG_LEVEL=INFO
+      - CACHE_TTL=3600
+    volumes:
+      - ./cache:/app/cache
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
