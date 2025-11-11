@@ -22,7 +22,7 @@ A production-ready natural language question-answering system that answers quest
 Visit the interactive documentation: https://comfortless-undefiant-aaron.ngrok-free.dev/docs
 
 **Using cURL:**
-``ash
+``bash
 curl -X POST "https://comfortless-undefiant-aaron.ngrok-free.dev/ask?use_cached_data=true" \
   -H "Content-Type: application/json" \
   -d '{"question": "When is Layla planning her trip to London?"}'
@@ -78,7 +78,7 @@ Return Answer with Confidence Score
 ## API Endpoints
 
 ### Ask Question
-``ash
+``bash
 POST https://comfortless-undefiant-aaron.ngrok-free.dev/ask?use_cached_data=true
 Content-Type: application/json
 
@@ -88,7 +88,7 @@ Content-Type: application/json
 ``
 
 ### Health Check
-``ash
+``bash
 GET https://comfortless-undefiant-aaron.ngrok-free.dev/health
 ``
 
@@ -112,7 +112,7 @@ GET https://comfortless-undefiant-aaron.ngrok-free.dev/health
 
 ## Project Structure
 
-- pp.py - Entry point
+- app.py - Entry point
 - src/main.py - FastAPI application with all endpoints
 - src/qa_engine.py - QA pipeline orchestration
 - src/llm_generator.py - Llama 3.2 integration
@@ -133,7 +133,7 @@ equirements.txt - Python dependencies
 ### Installation
 
 1. Install Ollama and pull model
-``ash
+bash
 ollama pull llama3.2:3b
 ollama serve
 ``
@@ -176,7 +176,6 @@ docker-compose up
 
 1. **Rule-Based Pattern Matching** [REJECTED] - Too rigid for natural language variation
 2. **BM25 Keyword Search** [REJECTED] - Misses semantic meaning
-3. **Hybrid BM25 + Semantic** [REJECTED] - Complex score normalization
 4. **Pure Semantic Search** [CHOSEN] - Understands intent, handles paraphrasing
 5. **Gemma 3 QA** [REJECTED] - Overly cautious, refused to answer
 6. **Llama 3.2** [CHOSEN] - Confident, conversational, better date inference
@@ -206,7 +205,7 @@ Dataset: 3,349 messages from 10 users
 | Vikram Desai | 335 |
 | Layla Kawaguchi | 330 |
 | Armand Dupont | 319 |
-| Hans M�ller | 314 |
+| Hans Miller | 314 |
 | Lorenzo Cavalli | 288 |
 
 ## Requirements Checklist
@@ -231,13 +230,4 @@ All settings in src/config.py or .env:
 - SEMANTIC_THRESHOLD=0.2
 - API_BASE_URL=https://november7-730026606190.europe-west1.run.app
 
-## License
 
-MIT License
-
----
-
-**Status**: Production Ready
-**Version**: 2.0.0
-**Deployed**: https://comfortless-undefiant-aaron.ngrok-free.dev
-**Last Updated**: November 2024
