@@ -1,48 +1,40 @@
-# Member QA System
+# 🧠 Member QA System
 
-A production-ready natural language question-answering system that answers questions about member data using advanced NLP, semantic search, and LLM generation.
+A **production-ready Natural Language Question Answering (QA)** system for querying **member data** using advanced **semantic search**, **retrieval-augmented LLM reasoning**, and **FastAPI**.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green.svg)](https://fastapi.tiangolo.com)
 [![LLM](https://img.shields.io/badge/LLM-Llama_3.2-orange.svg)](https://ollama.com)
-[![Status](https://img.shields.io/badge/Status-Deployed-green.svg)](#live-service)
+[![Status](https://img.shields.io/badge/Status-Deployed-success.svg)](#live-demo)
 
-## Quick Links
+---
 
-- **Live API**: https://comfortless-undefiant-aaron.ngrok-free.dev
-- **Interactive Docs**: https://comfortless-undefiant-aaron.ngrok-free.dev/docs
-- **Health Check**: https://comfortless-undefiant-aaron.ngrok-free.dev/health
+## 🚀 Live Demo
 
-## Live Service
+> The system is **live and publicly accessible**.
 
-**The system is currently deployed and publicly accessible!**
+| Resource | URL |
+|-----------|------|
+| 🌐 **Live API** | [comfortless-undefiant-aaron.ngrok-free.dev](https://comfortless-undefiant-aaron.ngrok-free.dev) |
+| 📘 **Interactive Docs** | [Swagger UI](https://comfortless-undefiant-aaron.ngrok-free.dev/docs) |
+| 🩺 **Health Check** | [Check Status](https://comfortless-undefiant-aaron.ngrok-free.dev/health) |
 
-### Try It Now
+### Quick Test (cURL)
+```bash
+curl -X POST "https://comfortless-undefiant-aaron.ngrok-free.dev/ask?use_cached_data=true"   -H "Content-Type: application/json"   -d '{"question": "When is Layla planning her trip to London?"}'
+```
 
-Visit the interactive documentation: https://comfortless-undefiant-aaron.ngrok-free.dev/docs
+---
 
-**Using cURL:**
-``bash
-curl -X POST "https://comfortless-undefiant-aaron.ngrok-free.dev/ask?use_cached_data=true" \
-  -H "Content-Type: application/json" \
-  -d '{"question": "When is Layla planning her trip to London?"}'
-``
+## 💡 Example Questions
 
-### Example Questions
+| Question | Example Answer |
+|-----------|----------------|
+| “When is Layla planning her trip to London?” | Layla is planning her trip to London starting Monday, March 11th, and staying at Claridge’s for five nights. |
+| “What does Vikram need?” | Vikram needs a yoga instructor for their stay at the villa in Tuscany. |
 
-- **"When is Layla planning her trip to London?"**
-  - Answer: "Layla is planning her trip to London starting Monday, March 11th, and staying at Claridge's for five nights."
-
-- **"What does Vikram need?"**
-  - Answer: "Vikram needs a yoga instructor for their stay at the villa in Tuscany."
-
-- **"How many cars does Vikram Desai have?"**
-
-- **"What are Amira's favorite restaurants?"**
-
-### Response Example
-
-``json
+### Example Response
+```json
 {
   "answer": "Layla is planning her trip to London starting Monday, March 11th, and staying at Claridge's for five nights.",
   "confidence": 0.35,
@@ -55,149 +47,133 @@ curl -X POST "https://comfortless-undefiant-aaron.ngrok-free.dev/ask?use_cached_
     "used_cached_data": true
   }
 }
-``
+```
 
-## Architecture
+---
 
-### System Pipeline
+## ⚙️ System Architecture
 
-``
-User Question
-     ?
-Extract Person Name (10 known users)
-     ?
-Fetch Messages from Cache/Local File/API
-     ?
-Semantic Similarity Search (Top-10 relevance)
-     ?
-LLM Answer Generation (Llama 3.2)
-     ?
-Return Answer with Confidence Score
-``
+```
+┌─────────────────────────────┐
+│        User Question        │
+└──────────────┬──────────────┘
+               ▼
+     🔍 Extract Person Name
+               ▼
+    🧠 Semantic Message Search
+               ▼
+   🗣️  LLM Answer Generation
+               ▼
+   ✅ JSON Answer + Confidence
+```
 
-## API Endpoints
+**Key Components**
+- **Person Extraction:** Identifies which of 10 known members the query is about.  
+- **Retriever:** Performs semantic similarity search across ~3,349 messages.  
+- **Generator:** Uses *Llama 3.2 (3B)* via **Ollama** for reasoning and answer synthesis.  
+- **Cache:** `diskcache` for performance and persistence.  
 
-### Ask Question
-``bash
-POST https://comfortless-undefiant-aaron.ngrok-free.dev/ask?use_cached_data=true
-Content-Type: application/json
+---
 
-{
-  "question": "When is Layla planning her trip to London?"
-}
-``
+## 🧩 API Endpoints
 
-### Health Check
-``bash
-GET https://comfortless-undefiant-aaron.ngrok-free.dev/health
-``
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| `POST` | `/ask` | Ask a question (uses cache by default) |
+| `GET` | `/health` | Health and uptime check |
+| `GET` | `/docs` | Interactive Swagger UI |
+| `GET` | `/stats` | Returns dataset and performance stats |
+| `GET` | `/users` | Lists all known members |
+| `POST` | `/refresh-data` | Forces data reload from API |
 
-### Other Endpoints
-- GET /docs - Interactive API documentation (Swagger UI)
-- GET /stats - System statistics
-- GET /users - List all known users
-- POST /refresh-data - Force refresh from external API
+---
 
-## Technical Stack
+## 🛠️ Tech Stack
 
-| Component | Technology |
-|-----------|-----------|
-| Framework | FastAPI 0.104+ |
-| Language | Python 3.11 |
-| LLM | Llama 3.2:3b (via Ollama) |
-| Embeddings | SentenceTransformers (all-MiniLM-L6-v2) |
-| Retrieval | Semantic similarity search |
-| Caching | diskcache |
-| Deployment | Docker + ngrok |
+| Layer | Technology |
+|-------|-------------|
+| **Framework** | FastAPI 0.104+ |
+| **Language** | Python 3.11 |
+| **LLM** | Llama 3.2 (3B) via Ollama |
+| **Embeddings** | SentenceTransformers *(all-MiniLM-L6-v2)* |
+| **Retrieval** | Semantic Similarity Search |
+| **Caching** | diskcache (1-hour TTL) |
+| **Deployment** | Docker + ngrok Tunnel |
 
-## Project Structure
+---
 
-- app.py - Entry point
-- src/main.py - FastAPI application with all endpoints
-- src/qa_engine.py - QA pipeline orchestration
-- src/llm_generator.py - Llama 3.2 integration
-- src/hybrid_retriever.py - Semantic search retrieval
-- src/data_fetcher.py - Data loading with caching
-- src/config.py - Configuration management
-- messages_checkpoint.ndjson - Dataset (3,349 messages)
-- 
-equirements.txt - Python dependencies
+## 🗂️ Project Structure
 
-## Getting Started
+```
+member-qa-system/
+├── app.py                   # Entry point
+├── src/
+│   ├── main.py              # FastAPI app setup
+│   ├── qa_engine.py         # Core QA pipeline orchestration
+│   ├── llm_generator.py     # Llama 3.2 integration
+│   ├── hybrid_retriever.py  # Semantic search & ranking
+│   ├── data_fetcher.py      # Cached data loader
+│   ├── config.py            # Configuration management
+│   └── utils/
+├── messages_checkpoint.ndjson  # Dataset (3,349 messages)
+├── requirements.txt
+└── Dockerfile
+```
 
-### Prerequisites
-- Python 3.11+
-- Ollama with Llama 3.2 model
-- Docker (optional)
+---
 
-### Installation
+## ⚡ Performance Overview
 
-1. Install Ollama and pull model
-bash
-ollama pull llama3.2:3b
-ollama serve
-``
+| Metric | Value |
+|--------|--------|
+| **Messages Loaded** | 3,349 |
+| **Average Response Time** | 12–15 seconds |
+| **Warm Cache Response** | <1 second |
+| **Memory Usage** | ~500 MB |
+| **Confidence Threshold** | 0.2 |
 
-2. Install dependencies
-``ash
-pip install -r requirements.txt
-``
+---
 
-3. Run the server
-``ash
-python app.py
-``
+## 🧮 Data Management
 
-4. Access at http://localhost:8000
+- **Primary Source:** `messages_checkpoint.ndjson` (immutable dataset)
+- **Cache Layer:** diskcache (with TTL = 1 hour)
+- **Load Order:** Cache → Local File → External API (on force refresh)
+- **Data Integrity:** No nulls, unique IDs, minor duplicates (2–3 max)
 
-### Using Docker
+---
 
-``ash
-docker-compose up
-``
+## 🧠 Design Notes
 
-## Performance
+### Approaches Considered
 
-- **Messages Loaded**: 3,349 from local file
-- **Response Time**: 12-15 seconds per query
-- **Memory Usage**: ~500MB (with embeddings)
-- **Warm Cache**: <1 second response
+| Approach | Verdict | Notes |
+|-----------|----------|-------|
+| Rule-Based Pattern Matching | ❌ Rejected | Rigid, fails with paraphrasing |
+| BM25 Keyword Search | ❌ Rejected | Misses semantic intent |
+| Hybrid (BM25 + Semantic) | ⚠️ Evaluated | Slightly better, slower |
+| **Pure Semantic Search** | ✅ Chosen | Best recall and flexibility |
+| Gemma 3 QA | ❌ Rejected | Overly cautious, frequent refusals |
+| **Llama 3.2 (3B)** | ✅ Deployed | Natural, contextual reasoning |
 
-## Data Management
+---
 
-- **Source**: messages_checkpoint.ndjson (permanent, never overwritten)
-- **Cache**: In-memory with diskcache (1-hour TTL)
-- **Refresh**: Optional API update (updates cache only)
-- **Loading Priority**: Cache ? Local File ? API (only on force refresh)
+## 🔍 Data Insights
 
-## Bonus 1: Design Notes
-
-### Approaches Evaluated
-
-1. **Rule-Based Pattern Matching** [REJECTED] - Too rigid for natural language variation
-2. **BM25 Keyword Search** [REJECTED] - Misses semantic meaning
-4. **Pure Semantic Search** [CHOSEN] - Understands intent, handles paraphrasing
-5. **Gemma 3 QA** [REJECTED] - Overly cautious, refused to answer
-6. **Llama 3.2** [CHOSEN] - Confident, conversational, better date inference
-
-## Bonus 2: Data Insights
-
-Dataset: 3,349 messages from 10 users
-
-### Key Anomalies
-
-1. **Inconsistent User Naming** - Different name formats in messages
-2. **Temporal Inconsistency** - Relative dates without absolute timestamps
-3. **Ambiguous Pronouns** - No clear antecedents in messages
-4. **Data Quality** - No nulls, all IDs unique, 2-3 exact duplicates
-5. **Semantic Ambiguity** - Ownership vs preference queries
-6. **Multi-Event Confusion** - Multiple trips to same location
+| Observation | Description |
+|--------------|-------------|
+| **User Naming Variants** | Inconsistent formats per message thread |
+| **Temporal Ambiguity** | Relative terms (e.g., “next week”) |
+| **Pronoun Confusion** | Unclear referents (“she”, “they”) |
+| **Data Quality** | Clean — no nulls, minimal duplication |
+| **Semantic Ambiguity** | “Owns” vs “likes” confusion in queries |
+| **Event Overlap** | Multiple similar trips per user |
 
 ### User Distribution
 
-| User | Messages |
-|------|----------|
-| Lily O'Sullivan | 365 |
+| User | Message Count |
+|------|----------------|
+| Lily O’Sullivan | 365 |
 | Thiago Monteiro | 361 |
 | Fatima El-Tahir | 349 |
 | Sophia Al-Farsi | 346 |
@@ -208,26 +184,63 @@ Dataset: 3,349 messages from 10 users
 | Hans Miller | 314 |
 | Lorenzo Cavalli | 288 |
 
-## Requirements Checklist
+---
 
-### Core [COMPLETE]
-- Natural Language QA engine
-- POST /ask endpoint
-- JSON response format
-- External API integration
-- Public deployment
-- Error handling
+## ✅ Requirements Checklist
 
-### Bonus [COMPLETE]
-- Design notes (6 approaches evaluated)
-- Data insights (6 anomalies identified)
+| Category | Status |
+|-----------|--------|
+| Core QA Engine | ✅ Complete |
+| REST Endpoints | ✅ Complete |
+| JSON Schema | ✅ Complete |
+| Semantic Retrieval | ✅ Complete |
+| Public Deployment | ✅ Complete |
+| Error Handling | ✅ Complete |
+| Bonus: Design Notes | ✅ Complete |
+| Bonus: Data Insights | ✅ Complete |
 
-## Configuration
+---
 
-All settings in src/config.py or .env:
-- LLM_MODEL=llama3.2:3b
-- RETRIEVAL_METHOD=semantic
-- SEMANTIC_THRESHOLD=0.2
-- API_BASE_URL=https://november7-730026606190.europe-west1.run.app
+## 🧰 Setup & Installation
 
+### Prerequisites
+- Python ≥ 3.11  
+- [Ollama](https://ollama.com) with **Llama 3.2**  
+- Docker (optional, for containerized deployment)
+
+### Local Setup
+
+```bash
+# 1. Pull Llama 3.2
+ollama pull llama3.2:3b
+ollama serve
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Run the server
+python app.py
+```
+
+Visit → [http://localhost:8000](http://localhost:8000)
+
+### Using Docker
+```bash
+docker-compose up
+```
+
+---
+
+## 🧭 Configuration
+
+Environment variables are stored in `.env` or `src/config.py`:
+
+| Key | Example |
+|-----|----------|
+| `LLM_MODEL` | `llama3.2:3b` |
+| `RETRIEVAL_METHOD` | `semantic` |
+| `SEMANTIC_THRESHOLD` | `0.2` |
+| `API_BASE_URL` | `https://november7-730026606190.europe-west1.run.app` |
+
+---
 
